@@ -85,11 +85,14 @@ class MainHandler(webapp2.RequestHandler):
         have_error=False
         Username=valid_username(self.request.get("uname"))
         Password=valid_password(self.request.get("upass"))
+        Email=valid_email(self.request.get("email"))
+
         Get_password=self.request.get("upass")
         Get_verify_password=self.request.get("vpass")
         Get_Username=self.request.get("uname")
         Get_email=self.request.get("email")
-        Email=valid_email(self.request.get("email"))
+        Len_email=len(Get_email)
+
 
         if not Username:
             error_username="This is not a valid username"
@@ -100,10 +103,9 @@ class MainHandler(webapp2.RequestHandler):
         if Get_password != Get_verify_password:
             error_verifypassword="Password do not match"
             have_error=True
-
         if not Email:
             error_email = "That is not a valid email"
-            have_error=True
+
 
         if have_error:
             self.writeform(error_username,error_password,error_verifypassword,error_email)
