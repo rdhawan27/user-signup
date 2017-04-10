@@ -59,10 +59,10 @@ def valid_email(email):
 
 Usersignup_form="""<form method="post">
     <h1><a href="/">SignUp</a></h1>
-    <label>Username: <input type="text" name="uname" value= "%(username)s"/></label><span class="error" style="color:red"> %(error_username)s</span><br><br>
+    <label>Username: <input type="text" name="uname" /></label><span class="error" style="color:red"> %(error_username)s</span><br><br>
     <label>Password: <input type="password" name="upass"/></label><span class="error" style="color:red">%(error_password)s</span><br><br>
     <label>VerifyPassword: <input type="password" name="vpass"/></label><span class="error" style="color:red">%(error_verifypassword)s</span><br><br>
-    <label>Valid Email: <input type="email" name="email"/></label><span class="error" style="color:red">%(error_email)s</span><br><br>
+    <label>Valid Email: <input type="email" name="email" /></label><span class="error" style="color:red">%(error_email)s</span><br><br>
     <input type="submit"/>
     </form>"""
 
@@ -70,17 +70,18 @@ Usersignup_form="""<form method="post">
 
 class MainHandler(webapp2.RequestHandler):
 
-    def writeform(self,Get_Username="",error_username="",error_password="",error_verifypassword="",error_email=""):
-        self.response.write(Usersignup_form % {'error_username':error_username,
+    def writeform(self,error_username="",error_password="",error_verifypassword="",error_email=""):
+        self.response.write(Usersignup_form % {
+                                                'error_username':error_username,
                                                 'error_password':error_password,
                                                 'error_verifypassword':error_verifypassword,
-                                                'error_email':error_email,
-                                                'username':Get_Username})
+                                                'error_email':error_email
+                                                })
 
     def get(self):
         self.writeform()
 
-    def post(self,Get_Username="",error_username="",error_password="",error_verifypassword="",error_email=""):
+    def post(self,error_username="",error_password="",error_verifypassword="",error_email=""):
         have_error=False
         Username=valid_username(self.request.get("uname"))
         Password=valid_password(self.request.get("upass"))
@@ -99,27 +100,19 @@ class MainHandler(webapp2.RequestHandler):
         if Get_password != Get_verify_password:
             error_verifypassword="Password do not match"
             have_error=True
-        if Get_email==None:
-            have_error=False
+
         if not Email:
             error_email = "That is not a valid email"
             have_error=True
 
         if have_error:
-            self.writeform(Get_Username,error_username,error_password,error_verifypassword,error_email)
+            self.writeform(error_username,error_password,error_verifypassword,error_email)
+
         else:
             self.redirect("/welcome")
             #self.response.write("%sWelcome to HTML"% (Get_Username))
 
-class Welcome(webapp2.RequestHandler):
-    def writeform(self,error_username="",error_password="",error_verifypassword="",error_email=""):
-        self.response.write(Usersignup_form % {'error_username':error_username,
-                                                'error_password':error_password,
-                                                'error_verifypassword':error_verifypassword,
-                                                'error_email':error_email})
-
-    def get(self):
-        self.writeform()
+class Welcome(MainHandler):
 
     def post(self):
         username=self.request.get("uname")
