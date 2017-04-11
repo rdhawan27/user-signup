@@ -106,19 +106,18 @@ class MainHandler(webapp2.RequestHandler):
         if not Email:
             error_email = "That is not a valid email"
 
-
         if have_error:
-            self.writeform(error_username,error_password,error_verifypassword,error_email)
+            self.writeform(error_username,error_password,error_verifypassword)
 
         else:
-            self.redirect("/welcome")
+            self.redirect("/welcome?uname=" + Get_Username)
             #self.response.write("%sWelcome to HTML"% (Get_Username))
 
 class Welcome(MainHandler):
 
-    def post(self):
+    def get(self):
         username=self.request.get("uname")
-        self.response.write("%sWelcome to HTML"% (
+        self.response.write("%s Welcome to HTML"% (
     username))
 
 
